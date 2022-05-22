@@ -2,8 +2,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 
 def get_menu():
-    keyboard = ReplyKeyboardMarkup(resize_keyboard=True,
-                                   one_time_keyboard=True)
+    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
 
     by_name = KeyboardButton('By name')
     by_ingredient = KeyboardButton('By ingredient')
