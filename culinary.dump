@@ -1,0 +1,685 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 14.3 (Ubuntu 14.3-0ubuntu0.22.04.1)
+-- Dumped by pg_dump version 14.3 (Ubuntu 14.3-0ubuntu0.22.04.1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: ingredient; Type: TABLE; Schema: public; Owner: anton
+--
+
+CREATE TABLE public.ingredient (
+    id integer NOT NULL,
+    name character varying(50) NOT NULL
+);
+
+
+ALTER TABLE public.ingredient OWNER TO anton;
+
+--
+-- Name: ingredient_id_seq; Type: SEQUENCE; Schema: public; Owner: anton
+--
+
+CREATE SEQUENCE public.ingredient_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.ingredient_id_seq OWNER TO anton;
+
+--
+-- Name: ingredient_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: anton
+--
+
+ALTER SEQUENCE public.ingredient_id_seq OWNED BY public.ingredient.id;
+
+
+--
+-- Name: nationality; Type: TABLE; Schema: public; Owner: anton
+--
+
+CREATE TABLE public.nationality (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.nationality OWNER TO anton;
+
+--
+-- Name: nationality_id_seq; Type: SEQUENCE; Schema: public; Owner: anton
+--
+
+CREATE SEQUENCE public.nationality_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.nationality_id_seq OWNER TO anton;
+
+--
+-- Name: nationality_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: anton
+--
+
+ALTER SEQUENCE public.nationality_id_seq OWNED BY public.nationality.id;
+
+
+--
+-- Name: recipe; Type: TABLE; Schema: public; Owner: anton
+--
+
+CREATE TABLE public.recipe (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL,
+    serving_number integer NOT NULL,
+    cook_time time without time zone NOT NULL,
+    id_nationality integer NOT NULL,
+    instruction text,
+    photo character varying(100)
+);
+
+
+ALTER TABLE public.recipe OWNER TO anton;
+
+--
+-- Name: recipe_id_seq; Type: SEQUENCE; Schema: public; Owner: anton
+--
+
+CREATE SEQUENCE public.recipe_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipe_id_seq OWNER TO anton;
+
+--
+-- Name: recipe_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: anton
+--
+
+ALTER SEQUENCE public.recipe_id_seq OWNED BY public.recipe.id;
+
+
+--
+-- Name: recipe_ingredient; Type: TABLE; Schema: public; Owner: anton
+--
+
+CREATE TABLE public.recipe_ingredient (
+    id integer NOT NULL,
+    id_recipe integer NOT NULL,
+    id_ingredient integer NOT NULL,
+    id_unit integer,
+    quantity double precision
+);
+
+
+ALTER TABLE public.recipe_ingredient OWNER TO anton;
+
+--
+-- Name: recipe_ingredient_id_seq; Type: SEQUENCE; Schema: public; Owner: anton
+--
+
+CREATE SEQUENCE public.recipe_ingredient_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipe_ingredient_id_seq OWNER TO anton;
+
+--
+-- Name: recipe_ingredient_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: anton
+--
+
+ALTER SEQUENCE public.recipe_ingredient_id_seq OWNED BY public.recipe_ingredient.id;
+
+
+--
+-- Name: unit; Type: TABLE; Schema: public; Owner: anton
+--
+
+CREATE TABLE public.unit (
+    id integer NOT NULL,
+    name character varying(50) NOT NULL
+);
+
+
+ALTER TABLE public.unit OWNER TO anton;
+
+--
+-- Name: unit_id_seq; Type: SEQUENCE; Schema: public; Owner: anton
+--
+
+CREATE SEQUENCE public.unit_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.unit_id_seq OWNER TO anton;
+
+--
+-- Name: unit_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: anton
+--
+
+ALTER SEQUENCE public.unit_id_seq OWNED BY public.unit.id;
+
+
+--
+-- Name: ingredient id; Type: DEFAULT; Schema: public; Owner: anton
+--
+
+ALTER TABLE ONLY public.ingredient ALTER COLUMN id SET DEFAULT nextval('public.ingredient_id_seq'::regclass);
+
+
+--
+-- Name: nationality id; Type: DEFAULT; Schema: public; Owner: anton
+--
+
+ALTER TABLE ONLY public.nationality ALTER COLUMN id SET DEFAULT nextval('public.nationality_id_seq'::regclass);
+
+
+--
+-- Name: recipe id; Type: DEFAULT; Schema: public; Owner: anton
+--
+
+ALTER TABLE ONLY public.recipe ALTER COLUMN id SET DEFAULT nextval('public.recipe_id_seq'::regclass);
+
+
+--
+-- Name: recipe_ingredient id; Type: DEFAULT; Schema: public; Owner: anton
+--
+
+ALTER TABLE ONLY public.recipe_ingredient ALTER COLUMN id SET DEFAULT nextval('public.recipe_ingredient_id_seq'::regclass);
+
+
+--
+-- Name: unit id; Type: DEFAULT; Schema: public; Owner: anton
+--
+
+ALTER TABLE ONLY public.unit ALTER COLUMN id SET DEFAULT nextval('public.unit_id_seq'::regclass);
+
+
+--
+-- Data for Name: ingredient; Type: TABLE DATA; Schema: public; Owner: anton
+--
+
+COPY public.ingredient (id, name) FROM stdin;
+4	pineapple
+5	mango
+6	tomato
+7	red onion
+8	jalapeno
+9	coriander
+10	lime juice
+11	lemon juice
+12	salt
+13	cracked pepper
+14	tortilla chips
+17	strawberry
+20	yogurt
+21	milk
+22	chocolate syrup
+23	vanilla
+24	sunflower oil
+25	potato
+26	white fish fillet
+27	flour
+28	beer
+29	baking powder
+34	mint
+35	butter
+36	podded peas
+37	lemon
+38	white sugar
+39	egg
+40	baking soda
+41	sour cream
+42	cucumber
+43	grape tomatoes
+44	feta cheese
+45	jar capers
+46	greek salad dressing
+47	olive
+48	sugar
+49	lasagna noodles
+50	ground beef
+51	garlic
+52	garlic powder
+53	oregano
+54	black pepper
+55	cottage cheese
+56	parmesan cheese
+57	tomato-basil pasta sauce
+58	mozzarella cheese
+59	egg noodles
+60	cream soup
+61	graham crackers
+62	cream cheese
+63	onion
+64	beef broth
+65	water
+66	parsley
+67	thyme
+68	white wine
+69	french baguette
+70	chicken breast
+71	orange
+72	soy sauce
+73	honey
+74	garlic paste
+75	ginger paste
+76	vegetable oil
+77	beef sirloin
+78	broccoli florets
+79	red bell pepper
+80	carrot
+81	green onion
+82	sesame seeds
+83	chicken broth
+84	tomato with juice
+85	tomato with garlic and onion
+86	cream
+87	brasil pesto
+88	penne pasta
+89	olive oil
+90	asparagus
+91	pepper
+92	long grain white rice
+93	green bell pepper
+94	tomato sauce
+95	worcestershire sauce
+96	onion powder
+97	italian salad dressing
+98	french spinach
+99	dried tomato
+100	focaccia bread
+\.
+
+
+--
+-- Data for Name: nationality; Type: TABLE DATA; Schema: public; Owner: anton
+--
+
+COPY public.nationality (id, name) FROM stdin;
+4	mexico
+5	russia
+6	germany
+7	usa
+8	england
+9	greece
+10	europe
+11	italy
+12	france
+13	china
+14	french
+15	all cuisines
+\.
+
+
+--
+-- Data for Name: recipe; Type: TABLE DATA; Schema: public; Owner: anton
+--
+
+COPY public.recipe (id, name, serving_number, cook_time, id_nationality, instruction, photo) FROM stdin;
+175	chicken and sun-dried tomato bruschetta	8	00:45:00	11	1) Place the chicken and 1 cup salad dressing in a bowl. Cover, and marinate at least 3 hours in the refrigerator.\n2) Preheat the grill for high heat.\n3) Lightly oil the grill grate. Discard dressing used for marinating, and grill chicken 7 minutes per side, or until juices run clear. Cool and shred.\n4) In a large bowl, mix the cooked chicken, spinach, feta cheese, sun-dried tomatoes, and remaining dressing.\n5) Brush the focaccia bread with olive oil, and cook 1 minute per side on the prepared grill, or until lightly toasted. Place portions of the chicken mixture on the toasted focaccia to serve.\n	chicken_dried_tomato_bruschetta.jpg
+113	french onion soup	6	00:40:00	12	1) In a large pot over medium heat, saute the onions in the butter or margarine for 10 minutes, or until onions are tender. Stir in the flour, ground black pepper and the sugar to form a pasty mixture.\n2) Now add the beef broth, water, parsley and thyme and simmer for 10 minutes, Then add the wine and simmer for 10 more minutes.\n3) Preheat oven to broil.\n4) Fill individual oven safe bowls 3/4 full with the soup. Place a slice of bread on top of the soup and cover with the cheese. Place bowls in the oven.\n5) Broil in the oven until the cheese is melted and bubbly	french_onion_soup.jpg
+5	chocolate strawberry smoothie	1	00:05:00	7	1) In blender, blend frozen strawberries, yogurt, lactose-free milk, chocolate syrup and vanilla until nearly smooth.\n2) Pour into 16-18-ounce glass. Garnish with fresh strawberries, if desired.	chocolate_strawberry_smoothie.jpg
+4	fruit salsa	2	00:30:00	4	1) In large bowl, combine pineapple, mango, tomato, onion, jalapeno, coriander, lime juice, lemon juice and salt and pepper, to taste. With rubber spatula, mix all ingredients together.\n2) Taste and season with additional salt and pepper, if desired.\n3) Serve with tortilla chips.	fruit_salsa.jpg
+21	fish and chips	1	01:25:00	8	1) Preheat the oven to 180°C/350°\n2) Peel and slice the potatoes into chips.\n3) To make the mushy peas, pick and finely chop the mint leaves. Place the butter in a pan over a medium-low heat, add the peas and mint, pop the lid on and simmer gently for 10 minutes.\n4) Add a squeeze of lemon juice and season to taste with sea salt and black pepper – you can either mush the peas up in a food processor, or mash them by hand until stodgy, thick and perfect for dipping your fish into. Keep them warm until needed.\n5) Pour the sunflower oil into a deep fat fryer or a large sturdy pan and heat it to 190°C/375°F.\n6) Mix ½ a teaspoon of salt and 1 teaspoon of pepper together, then use it to season the fish fillets on both sides – this will help to remove any excess water, making the fish really meaty.\n7) Whisk the flour, beer and baking powder together until nice and shiny – the texture should be like semi-whipped double cream.\n8) Dust each fish fillet in a little of the extra flour, then dip into the batter and allow any excess to drip off. Holding one end, gently lower the fish into the oil one by one, working carefully so you dont get splashed – it will depend on the size of your fryer or pan how many fish you can cook at once.\n9) Cook for 4 minutes, or until the fish is cooked through and the batter is golden and crisp, then remove to kitchen paper to drain.\n10) Meanwhile, parboil the chips in boiling salted water for 4 to 5 minutes, or until softened but still retaining their shape, then drain and steam dry.\n11) When the chips are nice and dry, fry in the oil that the fish were cooked in at 180°C/350°F until golden and crisp.\n12) While the chips are frying, transfer the fish from the kitchen paper to a baking tray. Place in the oven for a few minutes to finish cooking – this way they will stay crisp while you finish off the chips.\n13) When the chips are done, drain them on kitchen paper, season with salt, and serve with the fish and mushy peas.	fish_and_chips.jpg
+63	banana bread	15	01:10:00	7	1) Preheat oven to 350 degrees F (175 degrees C). Grease a 9x5 inch loaf pan.\n2) In a large bowl, stir together the melted butter and sugar. Add the eggs and vanilla, mix well. Combine the flour, baking soda and salt, stir into the butter mixture until smooth. Finally, fold in the sour cream, walnuts and bananas. Spread evenly into the prepared pan.\n3) Bake at 350 degrees F (175 degrees C) for 60 minutes, or until a toothpick inserted into the center of the loaf comes out clean. Cool loaf in the pan for 10 minutes before removing to a wire rack to cool completely.\n	banana_bread.jpg
+154	penne with chicken and asparagus	8	00:35:00	14	1) Bring a large pot of lightly salted water to boil. Add pasta, and cook until al dente, about 8 to 10 minutes. Drain, and set aside.\n2) Warm 3 tablespoons olive oil in a large skillet over medium-high heat. Stir in chicken, and season with salt, pepper, and garlic powder. Cook until chicken is cooked through and browned, about 5 minutes. Remove chicken to paper towels.\n3) Pour chicken broth into the skillet. Then stir in asparagus, garlic, and a pinch more garlic powder, salt, and pepper. Cover, and steam until the asparagus is just tender, about 5 to 10 minutes. Return chicken to the skillet, and warm through.\n4) Stir chicken mixture into pasta, and mix well. Let sit about 5 minutes. Drizzle with 2 tablespoons olive oil, stir again, then sprinkle with Parmesan cheese.	penne_chicken_aspargus.jpg
+147	cream of tomato soup with pesto	6	00:30:00	7	1) Pour chicken broth into a large saucepan, and bring to a boil. Boil until reduced by about 1/3.\n2) Pour in both cans of the tomatoes, and return to a simmer. Pour in the half-and-half, and turn heat to low. Simmer for 15 minutes. Puree in batches in a blender, or use an immersion blender in the pan. Season with salt and pepper to taste. Ladle into bowls, and swirl in a spoonful of pesto before serving.\n	cream_tomato_soup_with_pesto.jpg
+132	quick beef stir-fry	4	00:25:00	13	1) Heat vegetable oil in a large wok or skillet over medium-high heat; cook and stir beef until browned, 3 to 4 minutes. Move beef to the side of the wok and add broccoli, bell pepper, carrots, green onion, and garlic to the center of the wok. Cook and stir vegetables for 2 minutes.\n2) Stir beef into vegetables and season with soy sauce and sesame seeds. Continue to cook and stir until vegetables are tender, about 2 more minutes.	quick_beef_stir_fry.jpg
+164	stuffed peppers	6	01:30:00	15	1) Preheat the oven to 350 degrees F (175 degrees C).\n2) Bring water and rice to a boil in a covered saucepan. Reduce heat to low and simmer until rice is tender, about 20 minutes.\n3) Meanwhile, heat oil in a skillet over medium heat. Add ground beef and cook until evenly browned and crumbly, 7 to 9 minutes.\n4) Hollow out bell peppers by removing and discarding the tops, seeds, and membranes. Slice the bottoms of the peppers if necessary to make sure they stand up straight.\n5) Arrange peppers in a baking dish with the hollowed sides facing upward.\n6) Prepare filling by mixing cooked beef, cooked rice, 1/2 of the tomato sauce, Worcestershire sauce, garlic powder, onion powder, salt, and pepper. Spoon an equal amount of filling into each hollowed pepper.\n7) Mix remaining tomato sauce and Italian seasoning in a bowl, and pour over the stuffed peppers.\n8) Bake in the preheated oven, basting with sauce every 15 minutes, until peppers are tender, about 1 hour.	stuffed_peppers.jpg
+71	greek salad	4	00:30:00	9	1) Keep all of the ingredients separate until ready to serve so the onion doesnt overpower everything. To prepare the salad, toss the cucumber, tomatoes, feta cheese, capers, onion, and salad dressing together in a large bowl until evenly coated. Sprinkle with the Greek olives to serve.\n	greek_salad.jpg
+78	pancakes	8	00:20:00	10	1) In a large bowl, sift together the flour, baking powder, salt and sugar. Make a well in the center and pour in the milk, egg and melted butter; mix until smooth.\n2) Heat a lightly oiled griddle or frying pan over medium-high heat. Pour or scoop the batter onto the griddle, using approximately 1/4 cup for each pancake. Brown on both sides and serve hot.	pancakes.png
+125	orange, honey and soy chicken	2	00:35:00	13	1) Combine chicken, orange juice, soy sauce, honey, garlic paste, ginger paste, and black pepper in a large nonstick skillet over medium-high heat. Cook and stir until the sauce reduces to a sticky glaze and the chicken is cooked through, about 20 minutes.	orange_honey_soy_chicken.jpg
+141	basic crepes	4	00:30:00	12	1) In a large mixing bowl, whisk together the flour and the eggs. Gradually add in the milk and water, stirring to combine. Add the salt and butter; beat until smooth.\n2) Heat a lightly oiled griddle or frying pan over medium high heat. Pour or scoop the batter onto the griddle, using approximately 1/4 cup for each crepe. Tilt the pan with a circular motion so that the batter coats the surface evenly.\n3) Cook the crepe for about 2 minutes, until the bottom is light brown. Loosen with a spatula, turn and cook the other side. Serve hot.	basic_crepes.jpg
+85	meat lasagna	8	01:35:00	11	1) Preheat oven to 350 degrees F (175 degrees C).\n2) Fill a large pot with lightly salted water and bring to a rolling boil over high heat. Once the water is boiling, add the lasagna noodles a few at a time, and return to a boil. Cook the pasta uncovered, stirring occasionally, until the pasta has cooked through, but is still firm to the bite, about 10 minutes. Remove the noodles to a plate.\n3) Place the ground beef into a skillet over medium heat, add the garlic, garlic powder, oregano, salt, and black pepper to the skillet. Cook the meat, chopping it into small chunks as it cooks, until no longer pink, about 10 minutes. Drain excess grease.\n4) In a bowl, mix the cottage cheese, eggs, and Parmesan cheese until thoroughly combined.\n5) Place 4 noodles side by side into the bottom of a 9x13-inch baking pan; top with a layer of the tomato-basil sauce, a layer of ground beef mixture, and a layer of the cottage cheese mixture. Repeat layers twice more, ending with a layer of sauce; sprinkle top with the mozzarella cheese. Cover the dish with aluminum foil.\n6) Bake in the preheated oven until the casserole is bubbling and the cheese has melted, about 30 minutes. Remove foil and bake until cheese has begun to brown, about 10 more minutes. Allow to stand at least 10 minutes before serving.\n	meat_lasagna.jpg
+97	beef stroganoff	4	00:20:00	5	1) Saute ground beef in a large skillet over medium heat until browned and crumbly; 5 to 10 minutes.\n2) At the same time, fill a large pot with lightly salted water and bring to a rapid boil. Cook egg noodles at a boil until tender yet firm to the bite, 7 to 9 minutes. Drain and set aside.\n3) Drain and discard any fat from the cooked beef. Stir condensed soup and garlic powder into the beef. Simmer for 10 minutes, stirring occasionally.\n4) Remove beef from the heat. Add egg noodles and stir to combine. Stir in sour cream and season with salt and pepper.\n	beef_stroganoff.jpg
+104	new york cheesecake	12	07:30:00	7	1) Preheat the oven to 350 degrees F (175 degrees C). Grease a 9-inch springform pan.\n2) Mix graham cracker crumbs and melted butter together in a medium bowl until well combined; press onto the bottom of the prepared pan to make a packed crust.\n3) Mix cream cheese and sugar together in a large bowl until smooth. Blend in milk, then mix in eggs, one at a time, until just combined. Add sour cream, flour, and vanilla; mix until smooth. Pour filling onto prepared crust.\n4) Bake in preheated oven for 1 hour. Turn the oven off; let cheesecake cool in the oven with the door closed for 5 to 6 hours to prevent cracking.\n5) Chill in the refrigerator until serving.	new_york_cheesecake.jpg
+\.
+
+
+--
+-- Data for Name: recipe_ingredient; Type: TABLE DATA; Schema: public; Owner: anton
+--
+
+COPY public.recipe_ingredient (id, id_recipe, id_ingredient, id_unit, quantity) FROM stdin;
+6	4	4	\N	1
+7	4	5	\N	1
+8	4	6	\N	2
+9	4	7	\N	0.5
+10	4	8	\N	1
+11	4	9	3	1
+12	4	10	3	2
+13	4	11	3	1
+17	4	12	\N	\N
+18	4	13	\N	\N
+19	4	14	\N	\N
+20	5	17	\N	6
+21	5	20	1	150
+22	5	21	1	100
+23	5	22	3	2
+24	5	23	3	0.25
+57	21	24	\N	\N
+58	21	25	\N	6
+59	21	26	1	225
+60	21	27	1	225
+61	21	28	2	285
+62	21	29	4	3
+63	21	34	5	2
+64	21	35	6	1
+65	21	36	\N	4
+66	21	37	\N	0.5
+67	63	35	7	0.5
+68	63	38	7	1
+69	63	39	\N	2
+70	63	23	4	1
+71	63	27	7	1.5
+72	63	40	4	1
+73	63	12	4	0.5
+74	63	41	7	0.5
+75	71	42	\N	1
+76	71	43	8	2
+77	71	44	9	4
+78	71	45	9	4
+79	71	7	\N	0.5
+80	71	46	7	0.25
+81	71	47	7	0.5
+82	78	27	7	1.5
+83	78	29	4	3.5
+84	78	12	4	0.25
+85	78	48	3	1
+86	78	21	7	1.25
+87	78	39	\N	1
+88	78	35	3	3
+89	85	49	\N	12
+90	85	50	10	1
+91	85	51	11	2
+92	85	52	4	0.5
+93	85	53	4	1
+94	85	12	\N	\N
+95	85	54	\N	\N
+96	85	55	9	16
+97	85	39	\N	2
+98	85	56	7	0.5
+99	85	57	9	25
+100	85	58	7	2
+101	97	59	9	8
+102	97	50	10	1
+103	97	60	9	10.5
+104	97	52	3	1
+105	97	41	7	0.5
+106	97	12	\N	\N
+107	97	54	\N	\N
+108	104	61	\N	15
+109	104	35	3	2
+110	104	62	9	8
+111	104	48	7	1.5
+112	104	21	7	0.75
+113	104	39	\N	4
+114	104	41	7	1
+115	104	27	7	0.25
+116	104	23	3	1
+117	113	63	\N	4
+118	113	35	3	3
+119	113	27	3	3
+120	113	54	4	1
+121	113	48	4	1
+122	113	64	9	10.5
+123	113	65	7	1.25
+124	113	66	4	0.5
+125	113	67	4	0.25
+126	113	68	7	1
+127	113	69	\N	1
+128	113	58	9	8
+129	125	70	\N	2
+130	125	71	\N	2
+131	125	72	7	0.25
+132	125	73	7	0.25
+133	125	74	3	1
+134	125	75	3	1
+135	125	54	\N	\N
+136	132	76	3	2
+137	132	77	10	1
+138	132	78	7	1.5
+139	132	79	\N	1
+140	132	80	\N	2
+141	132	81	\N	1
+142	132	51	4	1
+143	132	72	3	2
+144	132	82	3	2
+145	141	27	7	1
+146	141	39	\N	2
+147	141	21	7	0.5
+148	141	65	7	0.5
+149	141	12	4	0.25
+150	141	35	3	2
+151	147	83	9	32
+152	147	84	9	14.5
+153	147	85	9	14.5
+154	147	86	7	1
+155	147	87	3	2
+156	147	12	\N	\N
+157	147	54	\N	\N
+158	154	88	9	16
+159	154	89	3	5
+160	154	70	\N	2
+161	154	83	7	0.5
+162	154	90	12	1
+163	154	51	\N	1
+164	154	56	7	0.25
+165	154	12	\N	\N
+166	154	91	\N	\N
+167	154	51	\N	\N
+168	164	65	7	1
+169	164	92	7	0.5
+170	164	76	3	1
+171	164	50	10	1
+172	164	93	\N	6
+173	164	94	9	16
+174	164	95	3	1
+175	164	52	4	0.25
+176	164	96	4	0.25
+177	164	12	\N	\N
+178	164	91	\N	\N
+179	175	70	\N	2
+180	175	97	7	1.25
+181	175	98	7	4
+182	175	44	7	0.3
+183	175	99	\N	8
+184	175	100	\N	1
+185	175	89	7	0.25
+\.
+
+
+--
+-- Data for Name: unit; Type: TABLE DATA; Schema: public; Owner: anton
+--
+
+COPY public.unit (id, name) FROM stdin;
+1	grams
+2	milliliters
+3	tablespoons
+4	teaspoons
+5	sprigs
+6	knob
+7	cups
+8	pints
+9	ounces
+10	pounds
+11	cloves
+12	bunches
+\.
+
+
+--
+-- Name: ingredient_id_seq; Type: SEQUENCE SET; Schema: public; Owner: anton
+--
+
+SELECT pg_catalog.setval('public.ingredient_id_seq', 100, true);
+
+
+--
+-- Name: nationality_id_seq; Type: SEQUENCE SET; Schema: public; Owner: anton
+--
+
+SELECT pg_catalog.setval('public.nationality_id_seq', 15, true);
+
+
+--
+-- Name: recipe_id_seq; Type: SEQUENCE SET; Schema: public; Owner: anton
+--
+
+SELECT pg_catalog.setval('public.recipe_id_seq', 181, true);
+
+
+--
+-- Name: recipe_ingredient_id_seq; Type: SEQUENCE SET; Schema: public; Owner: anton
+--
+
+SELECT pg_catalog.setval('public.recipe_ingredient_id_seq', 185, true);
+
+
+--
+-- Name: unit_id_seq; Type: SEQUENCE SET; Schema: public; Owner: anton
+--
+
+SELECT pg_catalog.setval('public.unit_id_seq', 12, true);
+
+
+--
+-- Name: ingredient ingredient_pkey; Type: CONSTRAINT; Schema: public; Owner: anton
+--
+
+ALTER TABLE ONLY public.ingredient
+    ADD CONSTRAINT ingredient_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ingredient ingrediet_unique; Type: CONSTRAINT; Schema: public; Owner: anton
+--
+
+ALTER TABLE ONLY public.ingredient
+    ADD CONSTRAINT ingrediet_unique UNIQUE (name);
+
+
+--
+-- Name: nationality nationality_pkey; Type: CONSTRAINT; Schema: public; Owner: anton
+--
+
+ALTER TABLE ONLY public.nationality
+    ADD CONSTRAINT nationality_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipe_ingredient recipe_ingredient_pkey; Type: CONSTRAINT; Schema: public; Owner: anton
+--
+
+ALTER TABLE ONLY public.recipe_ingredient
+    ADD CONSTRAINT recipe_ingredient_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipe recipe_pkey; Type: CONSTRAINT; Schema: public; Owner: anton
+--
+
+ALTER TABLE ONLY public.recipe
+    ADD CONSTRAINT recipe_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipe recipe_unique; Type: CONSTRAINT; Schema: public; Owner: anton
+--
+
+ALTER TABLE ONLY public.recipe
+    ADD CONSTRAINT recipe_unique UNIQUE (name, serving_number, cook_time, id_nationality);
+
+
+--
+-- Name: unit unit_pkey; Type: CONSTRAINT; Schema: public; Owner: anton
+--
+
+ALTER TABLE ONLY public.unit
+    ADD CONSTRAINT unit_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: unit unit_unique; Type: CONSTRAINT; Schema: public; Owner: anton
+--
+
+ALTER TABLE ONLY public.unit
+    ADD CONSTRAINT unit_unique UNIQUE (name);
+
+
+--
+-- Name: recipe recipe_id_nationality_fkey; Type: FK CONSTRAINT; Schema: public; Owner: anton
+--
+
+ALTER TABLE ONLY public.recipe
+    ADD CONSTRAINT recipe_id_nationality_fkey FOREIGN KEY (id_nationality) REFERENCES public.nationality(id) ON DELETE CASCADE;
+
+
+--
+-- Name: recipe_ingredient recipe_ingredient_id_ingredient_fkey; Type: FK CONSTRAINT; Schema: public; Owner: anton
+--
+
+ALTER TABLE ONLY public.recipe_ingredient
+    ADD CONSTRAINT recipe_ingredient_id_ingredient_fkey FOREIGN KEY (id_ingredient) REFERENCES public.ingredient(id) ON DELETE CASCADE;
+
+
+--
+-- Name: recipe_ingredient recipe_ingredient_id_recipe_fkey; Type: FK CONSTRAINT; Schema: public; Owner: anton
+--
+
+ALTER TABLE ONLY public.recipe_ingredient
+    ADD CONSTRAINT recipe_ingredient_id_recipe_fkey FOREIGN KEY (id_recipe) REFERENCES public.recipe(id) ON DELETE CASCADE;
+
+
+--
+-- Name: recipe_ingredient recipe_ingredient_id_unit_fkey; Type: FK CONSTRAINT; Schema: public; Owner: anton
+--
+
+ALTER TABLE ONLY public.recipe_ingredient
+    ADD CONSTRAINT recipe_ingredient_id_unit_fkey FOREIGN KEY (id_unit) REFERENCES public.unit(id) ON DELETE CASCADE;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
