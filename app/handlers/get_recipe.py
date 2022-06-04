@@ -1,11 +1,16 @@
 from datetime import datetime
 
-from app import dp, bd
+from app import dp, bd, bot
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 
 from app.data.menu_state import MenuState
-from app.keyboards.default.menu import get_menu
+
+
+async def send_photo(chat_id, photo_path):
+    if photo_path:
+        photo = open(f'static/{photo_path}', 'rb')
+        await bot.send_photo(chat_id=chat_id, photo=photo)
 
 
 @dp.message_handler(lambda message: message.text == 'By name', state='*')
@@ -16,13 +21,16 @@ async def request_recipe_name(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=MenuState.by_name)
 async def get_recipe_by_name(message: types.Message, state: FSMContext):
-    recipe = bd.get_by_name(message.text.lower())
+    recipe, photo_path = bd.get_by_name(message.text.lower())
+    await send_photo(message.chat['id'], photo_path)
     await message.answer(recipe)
 
 
 @dp.message_handler(lambda message: message.text == 'Random recipe', state='*')
 async def random_recipe(message: types.Message, state: FSMContext):
-    await message.answer(bd.get_random_recipe())
+    recipe, photo = bd.get_random_recipe()
+    await send_photo(message.chat['id'], photo)
+    await message.answer(recipe)
 
 
 @dp.message_handler(lambda message: message.text == 'By time', state='*')
@@ -40,11 +48,9 @@ async def get_recipe_by_time(message: types.Message, state: FSMContext):
         await request_recipe_time(message, state)
         return
     recipes = bd.get_by_time(time_)
-    if isinstance(recipes, str):
-        await message.answer(recipes)
-    else:
-        for recipe in recipes:
-            await message.answer(recipe)
+    for recipe, photo in recipes:
+        await send_photo(message.chat['id'], photo)
+        await message.answer(recipe)
 
 
 @dp.message_handler(lambda message: message.text == 'By serving count', state='*')
@@ -62,8 +68,20 @@ async def get_recipe_by_serving(message: types.Message, state: FSMContext):
         await request_recipe_serving(message, state)
         return
     recipes = bd.get_by_serving_count(count)
-    if isinstance(recipes, str):
-        await message.answer(recipes)
-    else:
-        for recipe in recipes:
-            await message.answer(recipe)
+    for recipe, photo in recipes:
+        await send_photo(message.chat['id'], photo)
+        await message.answer(recipe)
+
+
+@dp.message_handler(lambda message: message.text == 'By ingredient', state='*')
+async def request_recipe_ingredients(message: types.Message, state: FSMContext):
+    await state.set_state(MenuState.by_ingredients)
+    await message.answer('Type recipe\'s ingredients')
+
+
+@dp.message_handler(state=MenuState.by_ingredients)
+async def get_recipe_by_ingredients(message: types.Message, state: FSMContext):
+    result = bd.get_by_ingredients(message.text)
+    for recipe, photo in result:
+        await send_photo(message.chat['id'], photo)
+        await message.answer(recipe)
