@@ -50,52 +50,40 @@ class Database:
         return {'nationality':
                     self._exec_query(f'select name from nationality where id = {id_nationality}')[0].name}
 
-    def get_by_name(self, name: str) -> (str, str):
+    def get_by_name(self, name: str) -> set[str]:
         query = f'select * from recipe where name = \'{name.lower()}\''
         try:
             data = self._exec_query(query)[0]._asdict()
         except IndexError:
-            return c.NOT_FOUND_MESSAGE, None
-        data.update(self._get_ingredients(data['id']))
-        data.update(self._get_nationality(data['id_nationality']))
-        return format_recipe(data), data['photo']
+            return {'', }
+        return {str(data['id']), }
 
     def get_by_id(self, id_: int) -> (str, str):
         query = f'select * from recipe where id = \'{id_}\''
-        data = self._exec_query(query)[0]._asdict()
-        if data:
-            data.update(self._get_ingredients(data['id']))
-            data.update(self._get_nationality(data['id_nationality']))
-        return format_recipe(data), data['photo'] if data else c.NOT_FOUND_MESSAGE
+        try:
+            data = self._exec_query(query)[0]._asdict()
+        except IndexError:
+            return c.NOT_FOUND_MESSAGE
+        return data['id']
 
     def get_random_recipe(self) -> (str, str):
         ids = [rec.id for rec in self._exec_query('select id from recipe')]
         id_ = random.choice(ids)
-        recipe, photo = self.get_by_id(id_)
-        if recipe != c.NOT_FOUND_MESSAGE:
-            return recipe, photo
+        return {str(id_), }
 
-    def get_by_time(self, time: datetime.time):
+    def get_by_time(self, time: datetime.time) -> set[str]:
         query = f'select * from recipe where cook_time <= \'{time}\''
         data = [recipe._asdict() for recipe in self._exec_query(query)]
         if not data:
-            return c.NOT_FOUND_MESSAGE
-        for recipe in data:
-            recipe.update(self._get_ingredients(recipe['id']))
-            recipe.update(self._get_nationality(recipe['id_nationality']))
-        data = [(format_recipe(recipe), recipe['photo']) for recipe in data]
-        return data
+            return {'', }
+        return {str(recipe['id']) for recipe in data}
 
     def get_by_serving_count(self, serving_number: int):
         query = f'select * from recipe where serving_number = \'{serving_number}\''
         data = [recipe._asdict() for recipe in self._exec_query(query)]
         if not data:
             return c.NOT_FOUND_MESSAGE
-        for recipe in data:
-            recipe.update(self._get_ingredients(recipe['id']))
-            recipe.update(self._get_nationality(recipe['id_nationality']))
-        data = [(format_recipe(recipe), recipe['photo']) for recipe in data]
-        return data
+        return {str(recipe['id']) for recipe in data}
 
     def get_ingredient_id(self, ingredient_name: str):
         try:
@@ -104,16 +92,7 @@ class Database:
             return '-1'
         return result
 
-    def get_by_ingredients(self, ingredients: str):
-        ingredients = ingredients.lower().strip()
-        ingredients_idx = []
-        for ingredient in ingredients.split(','):
-            id_ = self.get_ingredient_id(ingredient.strip())
-            if id_ == '-1':
-                return f'Ingredient {capitalize_first(ingredient)} not found'
-            ingredients_idx.append(id_)
-        ingredients = ingredients_idx[:]
-        ingredients.sort()
+    def get_by_ingredients(self, ingredients: list[str]):
         recipes = self._exec_query(f'select distinct id_recipe from recipe_ingredient'
                                    f' where id_ingredient in ({",".join(ingredients)})')
         recipes = {recipe.id_recipe: self.search_ingredients(recipe.id_recipe) for recipe in recipes}
@@ -121,11 +100,22 @@ class Database:
         for recipe_id, ingredients_idx in recipes.items():
             if not ingredients_idx.issubset(ingredients):
                 recipes[recipe_id] = {}
-        answer = [self.get_by_id(recipe_id) for recipe_id, ingredients_idx in recipes.items() if ingredients_idx]
-        return answer if answer else c.NOT_FOUND_MESSAGE
+        answer = {str(recipe_id)
+                  for recipe_id, ingredients_idx in recipes.items() if ingredients_idx}
+        return answer
 
     def search_ingredients(self, id_recipe):
         result = self._exec_query(f'select id_ingredient from recipe_ingredient '
                          f'where id_recipe = {id_recipe}')
         result = {rec.id_ingredient for rec in result}
         return result
+
+    def get_recipe(self, id_recipe: int):
+        result = self._exec_query(f'select r.name, r.serving_number, r.cook_time, n.name as nationality,'
+                                  f' instruction, photo'
+                                  f' from recipe r join nationality n on n.id = id_nationality '
+                                  f'where r.id = {id_recipe}')[0]._asdict()
+        ingredients = self._get_ingredients(id_recipe)
+        result.update(ingredients)
+        return result
+
