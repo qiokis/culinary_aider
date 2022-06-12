@@ -122,7 +122,7 @@ class Database:
             if not ingredients_idx.issubset(ingredients):
                 recipes[recipe_id] = {}
         answer = [self.get_by_id(recipe_id) for recipe_id, ingredients_idx in recipes.items() if ingredients_idx]
-        return answer
+        return answer if answer else c.NOT_FOUND_MESSAGE
 
     def search_ingredients(self, id_recipe):
         result = self._exec_query(f'select id_ingredient from recipe_ingredient '
