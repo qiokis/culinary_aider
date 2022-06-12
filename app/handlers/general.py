@@ -1,8 +1,7 @@
-from app import dp, bd
+from app import dp
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 
-# from app.data.menu_state import MenuState
 from app.keyboards.default.menu import get_menu
 
 
