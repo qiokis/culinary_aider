@@ -13,7 +13,7 @@ async def update_recipe_idx(state: FSMContext, new_idx: Set[str]) -> int:
         recipe_intersect = state_recipes.intersection(new_idx)
         new_recipe_idx = ','.join(recipe_intersect)
         new_len = len(recipe_intersect)
-    await state.reset_state()
+    await state.reset_state(with_data=False)
     await state.update_data(recipe_idx=new_recipe_idx)
     return new_len
 
