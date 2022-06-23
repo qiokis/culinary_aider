@@ -4,7 +4,6 @@ from aiogram.dispatcher import FSMContext
 
 from app.data.menu_state import MenuState
 from app.utility.message import get_selected_message
-from app.utility.send_photo import send_photo
 from app.utility.validators import validate_ingredients
 from app.data.state_worker import update_recipe_idx
 
@@ -22,5 +21,6 @@ async def get_recipe_by_ingredients(message: types.Message, state: FSMContext):
         await message.answer('Wrong ingredients format, please try again.')
         await request_recipe_ingredients(message, state)
         return
-    recipes_count = await update_recipe_idx(state, bd.get_by_ingredients(ingredients))
+    recipes_count = await update_recipe_idx(state, bd.get_by_ingredients(ingredients,
+                                                                         int((await state.get_data())['match'])))
     await message.answer(get_selected_message(recipes_count))
