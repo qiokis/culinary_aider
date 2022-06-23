@@ -1,4 +1,5 @@
-from .general import handler
+from .general import *
+from .options import *
 from .random_recipe import *
 from .recipe_by_name import *
 from .recipe_by_time import *
