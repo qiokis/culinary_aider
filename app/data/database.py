@@ -5,8 +5,6 @@ import psycopg2
 from psycopg2.extras import NamedTupleCursor
 from contextlib import closing
 
-from app.utility.format_recipe import format_recipe
-from app.utility.format_recipe import capitalize_first
 import app.data.constants as c
 
 
@@ -92,14 +90,18 @@ class Database:
             return '-1'
         return result
 
-    def get_by_ingredients(self, ingredients: list[str]):
+    def get_by_ingredients(self, ingredients: list[str], match: int):
         recipes = self._exec_query(f'select distinct id_recipe from recipe_ingredient'
                                    f' where id_ingredient in ({",".join(ingredients)})')
         recipes = {recipe.id_recipe: self.search_ingredients(recipe.id_recipe) for recipe in recipes}
         ingredients = {int(ingredient) for ingredient in ingredients}
         for recipe_id, ingredients_idx in recipes.items():
-            if not ingredients_idx.issubset(ingredients):
-                recipes[recipe_id] = {}
+            if match == -1:
+                if not ingredients_idx.issubset(ingredients):
+                    recipes[recipe_id] = {}
+            else:
+                if len(ingredients_idx.intersection(ingredients)) < match:
+                    recipes[recipe_id] = {}
         answer = {str(recipe_id)
                   for recipe_id, ingredients_idx in recipes.items() if ingredients_idx}
         return answer
