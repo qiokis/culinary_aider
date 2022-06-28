@@ -1,2 +1,2 @@
 def get_selected_message(number: int) -> str:
-    return f'Done. {number} recipes selected.'
+    return f'Done. {number} recipes selected.' if number else 'Nothing were found.'

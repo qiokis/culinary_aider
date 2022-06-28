@@ -49,12 +49,11 @@ class Database:
                     self._exec_query(f'select name from nationality where id = {id_nationality}')[0].name}
 
     def get_by_name(self, name: str) -> set[str]:
-        query = f'select * from recipe where name = \'{name.lower()}\''
-        try:
-            data = self._exec_query(query)[0]._asdict()
-        except IndexError:
-            return {'', }
-        return {str(data['id']), }
+        query = f'select * from recipe where lower(name) like \'%{name.lower()}%\''
+        data = self._exec_query(query)
+        if not data:
+            return c.NOT_FOUND_MESSAGE
+        return {str(data._asdict()['id']) for data in data }
 
     def get_by_id(self, id_: int) -> (str, str):
         query = f'select * from recipe where id = \'{id_}\''
@@ -69,15 +68,16 @@ class Database:
         id_ = random.choice(ids)
         return {str(id_), }
 
-    def get_by_time(self, time: datetime.time) -> set[str]:
+    def get_by_time(self, time: datetime.time) -> set:
         query = f'select * from recipe where cook_time <= \'{time}\''
         data = [recipe._asdict() for recipe in self._exec_query(query)]
         if not data:
-            return {'', }
+            return c.NOT_FOUND_MESSAGE
         return {str(recipe['id']) for recipe in data}
 
     def get_by_serving_count(self, serving_number: int):
-        query = f'select * from recipe where serving_number = \'{serving_number}\''
+        query = f'select * from recipe where serving_number = {serving_number} ' \
+                f'or mod(serving_number, {serving_number}) = 0'
         data = [recipe._asdict() for recipe in self._exec_query(query)]
         if not data:
             return c.NOT_FOUND_MESSAGE
@@ -91,12 +91,15 @@ class Database:
         return result
 
     def get_by_ingredients(self, ingredients: list[str], match: int):
-        recipes = self._exec_query(f'select distinct id_recipe from recipe_ingredient'
-                                   f' where id_ingredient in ({",".join(ingredients)})')
+        if ingredients:
+            recipes = self._exec_query(f'select distinct id_recipe from recipe_ingredient'
+                                       f' where id_ingredient in ({",".join(ingredients)})')
+        else:
+            return {}
         recipes = {recipe.id_recipe: self.search_ingredients(recipe.id_recipe) for recipe in recipes}
         ingredients = {int(ingredient) for ingredient in ingredients}
         for recipe_id, ingredients_idx in recipes.items():
-            if match == -1:
+            if match <= 0:
                 if not ingredients_idx.issubset(ingredients):
                     recipes[recipe_id] = {}
             else:
