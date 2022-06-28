@@ -5,7 +5,6 @@ from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.types.bot_command import BotCommand
 from dotenv import load_dotenv
-import emoji
 
 from app.data.database import Database
 
@@ -26,7 +25,7 @@ async def main():
         BotCommand(command='/start', description='Start app'),
         BotCommand(command='/done', description='Done'),
         BotCommand(command='/options', description='Options'),
-        BotCommand(command='/secret', description=emoji.emojize('Secret'))
+        BotCommand(command='/secret', description='Secret')
     ]
 
     await bot.set_my_commands(commands)
