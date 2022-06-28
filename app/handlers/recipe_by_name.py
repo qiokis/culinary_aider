@@ -16,9 +16,11 @@ async def request_recipe_name(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=MenuState.by_name)
 async def get_recipe_by_name(message: types.Message, state: FSMContext):
-    recipes_count = await update_recipe_idx(state, bd.get_by_name(message.text.lower()))
+    recipes_count = await update_recipe_idx(message, state, bd.get_by_name(message.text.lower()))
     if recipes_count == 0:
         await message.answer('We don\'t have such a dish. Please try another.')
+        return
     elif recipes_count == 1:
         await send_recipes(message, state)
+        return
     await message.answer(get_selected_message(recipes_count))

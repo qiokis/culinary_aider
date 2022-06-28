@@ -21,5 +21,5 @@ async def get_recipe_by_time(message: types.Message, state: FSMContext):
         await message.answer('Wrong time format, please try again.')
         await request_recipe_time(message, state)
         return
-    recipes_count = await update_recipe_idx(state, bd.get_by_time(time_))
+    recipes_count = await update_recipe_idx(message, state, bd.get_by_time(time_))
     await message.answer(get_selected_message(recipes_count))
