@@ -22,7 +22,10 @@ bd = Database(os.environ.get('PG_USER'),
 async def main():
 
     commands = [
-        BotCommand(command='/start', description='Start app')
+        BotCommand(command='/start', description='Start app'),
+        BotCommand(command='/done', description='Done'),
+        BotCommand(command='/options', description='Options'),
+        BotCommand(command='/secret', description='Secret')
     ]
 
     await bot.set_my_commands(commands)

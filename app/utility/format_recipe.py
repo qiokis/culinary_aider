@@ -14,7 +14,7 @@ def format_recipe(recipe: dict):
     title = f'{capitalize_first(recipe["name"])}\n' \
            f'Serving number: {recipe["serving_number"]}\n' \
            f'Cook time: {recipe["cook_time"]}\n' \
-           f'Nationality: {recipe["nationality"]}\n'
+           f'Nationality: {capitalize_first(recipe["nationality"])}\n'
     ingredients = ''
     if recipe['ingredients']:
         ingredients = '\n'.join([f'{counter+1})'
